@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Set Slack Webhook{% endblock %}
+{% block content %}
+<h2>Set Slack Webhook</h2>
+<form method="post">
+    <div class="mb-3">
+        <label>Slack Webhook URL</label>
+        <input type="url" name="webhook" value="{{ user.slack_webhook or '' }}" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>
+{% endblock %}

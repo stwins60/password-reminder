@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.username }}!</h2>
+
+<p class="mb-2">Password status:
+    {% if password_healthy %}
+        <span class="badge bg-success">Healthy</span>
+    {% else %}
+        <span class="badge bg-danger">Needs Update</span>
+    {% endif %}
+</p>
+
+<h5 class="mt-4">Password History</h5>
+<ul class="list-group">
+    {% for pw in password_history %}
+    {% set days_old = (current_time - pw.created_at).days %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <div><strong>Date:</strong> {{ pw.created_at.strftime('%Y-%m-%d') }}</div>
+            <div><strong>Password:</strong> {{ pw.password_hash[:6] }}•••••••••••</div>
+            <div>
+                <strong>Expires In:</strong>
+                {% if days_old < 90 %}
+                    <span class="text-success">{{ 90 - days_old }} days left</span>
+                {% else %}
+                    <span class="text-danger">Expired</span>
+                {% endif %}
+            </div>
+        </div>
+        <span class="badge {% if pw.password_hash|length >= 64 %}bg-primary{% elif pw.password_hash|length >= 40 %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+            {% if pw.password_hash|length >= 64 %}Strong{% elif pw.password_hash|length >= 40 %}Medium{% else %}Weak{% endif %}
+        </span>
+    </li>
+    {% else %}
+    <li class="list-group-item text-muted">No password history available.</li>
+    {% endfor %}
+</ul>
+
+<div class="d-grid gap-2 mt-4">
+    <a href="/update-password" class="btn btn-warning">Update Password</a>
+    <a href="/notify-slack" class="btn btn-info">Send Slack Reminder</a>
+    <a href="/set-webhook" class="btn btn-secondary">Set Slack Webhook</a>
+    <a href="/logout" class="btn btn-dark">Logout</a>
+</div>
+{% endblock %}

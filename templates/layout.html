@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Password App{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">PasswordApp</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {% if session.user_id %}
+                    <li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/update-password">Update Password</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/set-webhook">Set Webhook</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-info">{{ messages[0] }}</div>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function checkStrength(password) {
+      const bar = document.getElementById("strengthBar");
+      const text = document.getElementById("strengthText");
+    
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[a-z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+      if (!password) {
+        bar.style.width = "0%";
+        bar.className = "progress-bar";
+        text.innerText = "";
+        return;
+      }
+    
+      switch (strength) {
+        case 1:
+        case 2:
+          bar.style.width = "25%";
+          bar.className = "progress-bar bg-danger";
+          text.innerText = "Weak";
+          break;
+        case 3:
+          bar.style.width = "50%";
+          bar.className = "progress-bar bg-warning";
+          text.innerText = "Fair";
+          break;
+        case 4:
+          bar.style.width = "75%";
+          bar.className = "progress-bar bg-info";
+          text.innerText = "Good";
+          break;
+        case 5:
+          bar.style.width = "100%";
+          bar.className = "progress-bar bg-success";
+          text.innerText = "Strong";
+          break;
+      }
+    }
+</script>
+    
+</body>
+</html>
