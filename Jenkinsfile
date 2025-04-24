@@ -18,6 +18,13 @@ pipeline {
                 sh "docker build -t ${IMAGE_NAME}:v-0.0.${IMAGE_TAG} ."
             }
         }
+        stage("Trivy Scan") {
+            steps {
+                script {
+                    sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:v-0.0.${IMAGE_TAG}"
+                }
+            }
+        }
         stage("Stop Old Container") {
             steps {
                 sh """
