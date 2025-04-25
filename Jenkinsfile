@@ -41,20 +41,21 @@ pipeline {
         //         """
         //     }
         // }
-       stage("Run App") {
+        stage("Run App") {
            steps {
             //    sh "docker run -d --name ${CONTAINER_NAME} -p 3414:5000 -e USER=lab-server ${IMAGE_NAME}:v-0.0.${IMAGE_TAG}"
             script {
-                kubeconfig(credentialsId: '2b8306e4-0b63-4b36-a84b-e6bf5b20e465', serverUrl: '') {
-                    // some block
-                    sh "sed -i 's|IMAGE_NAME|${IMAGE_NAME}:v-0.0.${IMAGE_TAG}|g' k8s/deploy.yaml"
-                    sh "sed -i 's|ENV_NAME|${ENV_NAME}|g' k8s/deploy.yaml"
-                    sh "sed -i 's|VERSION_NAME|${VERSION_NAME}|g' k8s/deploy.yaml"
+                    kubeconfig(credentialsId: '2b8306e4-0b63-4b36-a84b-e6bf5b20e465', serverUrl: '') {
+                        // some block
+                        sh "sed -i 's|IMAGE_NAME|${IMAGE_NAME}:v-0.0.${IMAGE_TAG}|g' k8s/deploy.yaml"
+                        sh "sed -i 's|ENV_NAME|${ENV_NAME}|g' k8s/deploy.yaml"
+                        sh "sed -i 's|VERSION_NAME|${VERSION_NAME}|g' k8s/deploy.yaml"
 
-                    sh "kubectl apply -f k8s/"
+                        sh "kubectl apply -f k8s/"
+                    }
                 }
-           }
-       }
+            }
+        }
     }
     post {
         always {
