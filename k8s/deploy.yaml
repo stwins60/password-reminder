@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: password-app
+    env: ENV_NAME
+    version: VERSION_NAME
+  name: password-app
+  namespace: lab-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: password-app
+  template:
+    metadata:
+      labels:
+        app: password-app
+    spec:
+      containers:
+      - image: IMAGE_NAME
+        name: password-app
+        ports:
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "218m"
+            memory: "512Mi"
+
